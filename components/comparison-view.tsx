@@ -2,7 +2,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge"
 
 type SiteScrapingResult = {
-  start_url: string
+  start_urls: string[]
   duration_seconds: number
   scraped_sites: number
   total_coincidences: number
@@ -39,13 +39,13 @@ export function ComparisonView({ sites }: { sites: SiteScrapingResult[] }) {
             })
 
             return (
-              <TableRow key={site.start_url}>
-                <TableCell className="font-medium">{new URL(site.start_url).hostname}</TableCell>
+              <TableRow key={site.start_urls[0]}>
+                <TableCell className="font-medium">{new URL(site.start_urls[0]).hostname}</TableCell>
                 <TableCell className="text-center">{site.scraped_sites}</TableCell>
                 <TableCell className="text-center">{site.total_coincidences}</TableCell>
                 {keywordStats.map((count, index) => (
                   <TableCell key={index} className="text-center">
-                    <Badge variant={count > 0 ? "success" : "secondary"}>{count}</Badge>
+                    <Badge variant={count > 0 ? "default" : "secondary"}>{count}</Badge>
                   </TableCell>
                 ))}
               </TableRow>

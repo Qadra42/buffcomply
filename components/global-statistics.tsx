@@ -1,8 +1,8 @@
 import { Card, CardContent } from "@/components/ui/card"
-import { Globe, Search, Clock, Signal } from "lucide-react"
+import { Globe, Search, Clock, Signal, BarChart2 } from "lucide-react"
 
 type SiteScrapingResult = {
-  start_url: string
+  start_urls: string[]
   duration_seconds: number
   scraped_sites: number
   total_coincidences: number
@@ -11,88 +11,86 @@ type SiteScrapingResult = {
 }
 
 export function GlobalStatistics({ sites }: { sites: SiteScrapingResult[] }) {
-  const totalSites = sites.length
-  const totalUrlsScanned = sites.reduce((sum, site) => sum + site.scraped_sites, 0)
-  const totalCoincidences = sites.reduce((sum, site) => sum + site.total_coincidences, 0)
-  const averageDuration = sites.reduce((sum, site) => sum + site.duration_seconds, 0) / sites.length
+  const stats = {
+    baseSites: sites.reduce((total, site) => total + site.start_urls.length, 0),
+    totalUrls: sites.reduce((sum, site) => sum + Object.keys(site.results).length, 0),
+    totalCoincidences: sites.reduce((sum, site) => sum + site.total_coincidences, 0),
+    averageDuration: sites.reduce((sum, site) => sum + site.duration_seconds, 0) / sites.length || 0
+  }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-      <StatCard icon={Globe} label="Sitios Base" value={totalSites} color="blue" />
-      <StatCard icon={Search} label="URLs Escaneadas" value={totalUrlsScanned} color="green" />
-      <StatCard icon={Signal} label="Coincidencias" value={totalCoincidences} color="purple" />
-      <StatCard icon={Clock} label="Duración Promedio" value={`${averageDuration.toFixed(1)}s`} color="orange" />
+    <div className="grid grid-cols-4 gap-4">
+      <StatsCard
+        label="Sitios Base"
+        value={stats.baseSites}
+        Icon={Globe}
+        trend="neutral"
+      />
+      <StatsCard
+        label="URLs Escaneadas"
+        value={stats.totalUrls}
+        Icon={Search}
+        trend="positive"
+      />
+      <StatsCard
+        label="Coincidencias"
+        value={stats.totalCoincidences}
+        Icon={BarChart2}
+        trend="neutral"
+      />
+      <StatsCard
+        label="Duración Promedio"
+        value={`${stats.averageDuration.toFixed(1)}s`}
+        Icon={Clock}
+        trend="neutral"
+      />
     </div>
   )
 }
 
-function StatCard({
-  icon: Icon,
-  label,
-  value,
-  color,
-}: {
-  icon: any
+interface StatsCardProps {
   label: string
-  value: string | number
-  color: "blue" | "green" | "purple" | "orange"
-}) {
-  const getGradient = () => {
-    switch (color) {
-      case "blue":
-        return "from-blue-50 to-blue-100/50"
-      case "green":
-        return "from-green-50 to-green-100/50"
-      case "purple":
-        return "from-purple-50 to-purple-100/50"
-      case "orange":
-        return "from-orange-50 to-orange-100/50"
+  value: number | string
+  Icon: React.ElementType
+  trend: "positive" | "negative" | "neutral"
+}
+
+function StatsCard({ label, value, Icon, trend }: StatsCardProps) {
+  const getBgColor = () => {
+    switch (trend) {
+      case "positive":
+        return "bg-gradient-to-br from-green-50 to-green-100/50"
+      case "negative":
+        return "bg-gradient-to-br from-red-50 to-red-100/50"
+      default:
+        return "bg-gradient-to-br from-gray-50 to-gray-100/50"
     }
   }
 
-  const getIconColor = () => {
-    switch (color) {
-      case "blue":
-        return "text-blue-500"
-      case "green":
-        return "text-green-500"
-      case "purple":
-        return "text-purple-500"
-      case "orange":
-        return "text-orange-500"
-    }
-  }
-
-  const getValueColor = () => {
-    switch (color) {
-      case "blue":
-        return "text-blue-700"
-      case "green":
+  const getTextColor = () => {
+    switch (trend) {
+      case "positive":
         return "text-green-700"
-      case "purple":
-        return "text-purple-700"
-      case "orange":
-        return "text-orange-700"
+      case "negative":
+        return "text-red-700"
+      default:
+        return "text-gray-700"
     }
   }
 
   return (
-    <Card
+    <div
       className={`
-      overflow-hidden transition-all duration-200 hover:shadow-lg
-      bg-gradient-to-br ${getGradient()}
-    `}
+        rounded-xl p-4 transition-all duration-200
+        hover:shadow-md ${getBgColor()}
+      `}
     >
-      <CardContent className="pt-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium text-gray-600">{label}</p>
-            <p className={`text-2xl font-bold ${getValueColor()}`}>{value}</p>
-          </div>
-          <Icon className={`h-8 w-8 ${getIconColor()}`} />
-        </div>
-      </CardContent>
-    </Card>
+      <div className="flex items-center gap-2">
+        <Icon className="h-4 w-4 text-gray-600" />
+        <p className="text-sm font-medium text-gray-600">{label}</p>
+      </div>
+      <p className={`text-2xl font-bold mt-1 ${getTextColor()}`}>{value}</p>
+    </div>
   )
 }
 

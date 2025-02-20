@@ -1,61 +1,78 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Plus, Minus } from "lucide-react"
-
-type Category = {
-  name: string
-  keywords: string[]
-}
+import { Label } from "@/components/ui/label"
 
 export function ScraperForm() {
+  const [title, setTitle] = useState("")
   const [urls, setUrls] = useState("")
-  const [categories, setCategories] = useState<Category[]>([
-    { name: "Bonuses", keywords: ["welcome bonus", "free spins", "no deposit"] },
-    { name: "Games", keywords: ["slots", "roulette", "blackjack"] },
-    { name: "Payments", keywords: ["deposit", "withdrawal", "payment methods"] },
-  ])
+  const [keywords, setKeywords] = useState<string[]>([])
+  const [isLoading, setIsLoading] = useState(false)
 
-  const handleAddCategory = () => {
-    setCategories([...categories, { name: "", keywords: [] }])
+  const handleAddKeyword = () => {
+    setKeywords([...keywords, ""])
   }
 
-  const handleRemoveCategory = (index: number) => {
-    setCategories(categories.filter((_, i) => i !== index))
+  const handleRemoveKeyword = (index: number) => {
+    setKeywords(keywords.filter((_, i) => i !== index))
   }
 
-  const handleCategoryNameChange = (index: number, name: string) => {
-    const newCategories = [...categories]
-    newCategories[index].name = name
-    setCategories(newCategories)
-  }
-
-  const handleAddKeyword = (categoryIndex: number, keyword: string) => {
-    const newCategories = [...categories]
-    newCategories[categoryIndex].keywords.push(keyword)
-    setCategories(newCategories)
-  }
-
-  const handleRemoveKeyword = (categoryIndex: number, keywordIndex: number) => {
-    const newCategories = [...categories]
-    newCategories[categoryIndex].keywords.splice(keywordIndex, 1)
-    setCategories(newCategories)
+  const handleKeywordChange = (index: number, value: string) => {
+    const newKeywords = [...keywords]
+    newKeywords[index] = value
+    setKeywords(newKeywords)
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Aquí iría la lógica para iniciar el scraping
-    console.log("Iniciando scraping con:", { urls, categories })
+    setIsLoading(true)
+
+    try {
+      const urlList = urls.split('\n').filter(url => url.trim() !== '')
+      
+      const params = new URLSearchParams()
+      params.append('title', title)
+      urlList.forEach(url => params.append('urls', url.trim()))
+      keywords.forEach(keyword => params.append('keywords', keyword))
+      params.append('max_depth', '1')
+
+      const response = await fetch(`http://127.0.0.1:8000/api/v1/scrape/?${params.toString()}`)
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`)
+      }
+
+      const data = await response.json()
+      console.log('Scraping results:', data)
+      // Handle the results here
+
+    } catch (error) {
+      console.error('Error during scraping:', error)
+      // Handle error here
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div>
+        <Label htmlFor="title">Título del análisis</Label>
+        <Input
+          id="title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Ej: Análisis de sitios de apuestas"
+          required
+        />
+      </div>
+
       <Card>
         <CardHeader>
           <CardTitle>Target URLs</CardTitle>
@@ -72,61 +89,42 @@ export function ScraperForm() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Keyword Categories</CardTitle>
+          <CardTitle>Keywords</CardTitle>
         </CardHeader>
         <CardContent>
-          {categories.map((category, categoryIndex) => (
-            <div key={categoryIndex} className="mb-4 p-4 border rounded">
-              <div className="flex items-center mb-2">
+          <div className="space-y-2">
+            {keywords.map((keyword, index) => (
+              <div key={index} className="flex items-center gap-2">
                 <Input
-                  value={category.name}
-                  onChange={(e) => handleCategoryNameChange(categoryIndex, e.target.value)}
-                  placeholder="Category name"
-                  className="mr-2"
+                  value={keyword}
+                  onChange={(e) => handleKeywordChange(index, e.target.value)}
+                  placeholder="Enter keyword"
                 />
-                <Button type="button" variant="outline" size="icon" onClick={() => handleRemoveCategory(categoryIndex)}>
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  size="icon"
+                  onClick={() => handleRemoveKeyword(index)}
+                >
                   <Minus className="h-4 w-4" />
                 </Button>
               </div>
-              {category.keywords.map((keyword, keywordIndex) => (
-                <div key={keywordIndex} className="flex items-center mt-2">
-                  <Input
-                    value={keyword}
-                    onChange={(e) => {
-                      const newCategories = [...categories]
-                      newCategories[categoryIndex].keywords[keywordIndex] = e.target.value
-                      setCategories(newCategories)
-                    }}
-                    placeholder="Keyword"
-                    className="mr-2"
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="icon"
-                    onClick={() => handleRemoveKeyword(categoryIndex, keywordIndex)}
-                  >
-                    <Minus className="h-4 w-4" />
-                  </Button>
-                </div>
-              ))}
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => handleAddKeyword(categoryIndex, "")}
-                className="mt-2"
-              >
-                <Plus className="h-4 w-4 mr-2" /> Add Keyword
-              </Button>
-            </div>
-          ))}
-          <Button type="button" onClick={handleAddCategory}>
-            <Plus className="h-4 w-4 mr-2" /> Add Category
-          </Button>
+            ))}
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleAddKeyword}
+              className="w-full"
+            >
+              <Plus className="h-4 w-4 mr-2" /> Add Keyword
+            </Button>
+          </div>
         </CardContent>
       </Card>
 
-      <Button type="submit">Start Scraping</Button>
+      <Button type="submit" disabled={isLoading}>
+        {isLoading ? "Scraping..." : "Start Scraping"}
+      </Button>
     </form>
   )
 }
