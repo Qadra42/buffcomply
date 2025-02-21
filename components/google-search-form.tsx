@@ -10,6 +10,9 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Plus, Minus, Search, Globe2 } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { BasicConfigStep } from "@/components/steps/basic-config-step"
+import { KeywordsConfigStep } from "@/components/steps/keywords-config-step"
+import { ReviewStep } from "@/components/steps/review-step"
 
 type Category = {
   name: string
@@ -30,6 +33,9 @@ const LANGUAGES = {
   pt: "Portugués",
 }
 
+// Definir los pasos del wizard
+type WizardStep = 'basic' | 'keywords' | 'review'
+
 export function GoogleSearchForm() {
   const router = useRouter()
   const [searchQuery, setSearchQuery] = useState("")
@@ -46,6 +52,9 @@ export function GoogleSearchForm() {
       keywords: ["bono bienvenida", "sin depósito", "giros gratis"],
     },
   ])
+  const [currentStep, setCurrentStep] = useState<WizardStep>('basic')
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState<string | null>(null)
 
   const handleAddCategory = () => {
     setCategories([...categories, { name: "", keywords: [] }])
@@ -71,6 +80,59 @@ export function GoogleSearchForm() {
     const newCategories = [...categories]
     newCategories[categoryIndex].keywords.splice(keywordIndex, 1)
     setCategories(newCategories)
+  }
+
+  // Validación del paso básico
+  const validateBasicStep = () => {
+    if (!searchQuery.trim()) {
+      setError('El término de búsqueda es obligatorio')
+      return false
+    }
+    setError(null)
+    return true
+  }
+
+  // Validación del paso de keywords
+  const validateKeywordsStep = () => {
+    if (categories.some(cat => !cat.name.trim())) {
+      setError('Todas las categorías deben tener un nombre')
+      return false
+    }
+    if (categories.some(cat => cat.keywords.length === 0)) {
+      setError('Cada categoría debe tener al menos una keyword')
+      return false
+    }
+    setError(null)
+    return true
+  }
+
+  const handleNextStep = () => {
+    switch (currentStep) {
+      case 'basic':
+        if (validateBasicStep()) {
+          setCurrentStep('keywords')
+          setSuccess('Configuración básica guardada')
+        }
+        break
+      case 'keywords':
+        if (validateKeywordsStep()) {
+          setCurrentStep('review')
+          setSuccess('Keywords configuradas correctamente')
+        }
+        break
+    }
+  }
+
+  const handlePreviousStep = () => {
+    switch (currentStep) {
+      case 'keywords':
+        setCurrentStep('basic')
+        break
+      case 'review':
+        setCurrentStep('keywords')
+        break
+    }
+    setError(null)
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -123,158 +185,104 @@ export function GoogleSearchForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <Card className="overflow-hidden border-0 shadow-lg bg-gradient-to-br from-gray-50 to-white">
-        <CardHeader className="border-b bg-gradient-to-r from-gray-50 to-white">
-          <CardTitle className="flex items-center gap-2">
-            <Search className="h-5 w-5 text-blue-500" />
-            Configuración de Búsqueda
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4 p-6">
-          <div className="grid gap-4">
-            <div>
-              <Label htmlFor="searchQuery">Término de Búsqueda</Label>
-              <Input
-                id="searchQuery"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Ej: mejores casinos online 2024"
-                className="mt-1.5"
-              />
-            </div>
-
-            <div className="grid grid-cols-3 gap-4">
-              <div>
-                <Label htmlFor="resultsCount">Número de Resultados</Label>
-                <Select value={resultsCount} onValueChange={setResultsCount}>
-                  <SelectTrigger id="resultsCount" className="mt-1.5">
-                    <SelectValue placeholder="Seleccionar cantidad" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="100">100 resultados</SelectItem>
-                    <SelectItem value="200">200 resultados</SelectItem>
-                    <SelectItem value="300">300 resultados</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <Label htmlFor="googleDomain">Dominio de Google</Label>
-                <Select value={googleDomain} onValueChange={setGoogleDomain}>
-                  <SelectTrigger id="googleDomain" className="mt-1.5">
-                    <SelectValue placeholder="Seleccionar dominio" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.entries(GOOGLE_DOMAINS).map(([domain, label]) => (
-                      <SelectItem key={domain} value={domain}>
-                        {label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <Label htmlFor="language">Idioma</Label>
-                <Select value={language} onValueChange={setLanguage}>
-                  <SelectTrigger id="language" className="mt-1.5">
-                    <SelectValue placeholder="Seleccionar idioma" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.entries(LANGUAGES).map(([code, label]) => (
-                      <SelectItem key={code} value={code}>
-                        {label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card className="overflow-hidden border-0 shadow-lg bg-gradient-to-br from-gray-50 to-white">
-        <CardHeader className="border-b bg-gradient-to-r from-gray-50 to-white">
-          <CardTitle className="flex items-center gap-2">
-            <Globe2 className="h-5 w-5 text-green-500" />
-            Categorías de Keywords
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-6">
-          {categories.map((category, categoryIndex) => (
-            <div
-              key={categoryIndex}
-              className="mb-4 p-4 rounded-lg border bg-white/50 hover:bg-white/80 transition-colors"
-            >
-              <div className="flex items-center mb-2">
-                <Input
-                  value={category.name}
-                  onChange={(e) => handleCategoryNameChange(categoryIndex, e.target.value)}
-                  placeholder="Nombre de la categoría"
-                  className="mr-2"
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="icon"
-                  onClick={() => handleRemoveCategory(categoryIndex)}
-                  className="hover:border-red-500 hover:text-red-500 transition-colors"
-                >
-                  <Minus className="h-4 w-4" />
-                </Button>
-              </div>
-              {category.keywords.map((keyword, keywordIndex) => (
-                <div key={keywordIndex} className="flex items-center mt-2">
-                  <Input
-                    value={keyword}
-                    onChange={(e) => {
-                      const newCategories = [...categories]
-                      newCategories[categoryIndex].keywords[keywordIndex] = e.target.value
-                      setCategories(newCategories)
-                    }}
-                    placeholder="Keyword"
-                    className="mr-2"
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="icon"
-                    onClick={() => handleRemoveKeyword(categoryIndex, keywordIndex)}
-                    className="hover:border-red-500 hover:text-red-500 transition-colors"
-                  >
-                    <Minus className="h-4 w-4" />
-                  </Button>
-                </div>
-              ))}
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => handleAddKeyword(categoryIndex, "")}
-                className="mt-2 hover:border-green-500 hover:text-green-500 transition-colors"
+    <div className="space-y-6">
+      {/* Stepper indicator */}
+      <div className="flex justify-between mb-8">
+        {['Configuración Básica', 'Keywords', 'Revisión'].map((step, index) => (
+          <div
+            key={step}
+            className={`flex items-center ${
+              index === ['basic', 'keywords', 'review'].indexOf(currentStep)
+                ? 'text-blue-600'
+                : 'text-gray-400'
+            }`}
+          >
+            <div className="flex items-center">
+              <div className={`rounded-full h-8 w-8 flex items-center justify-center border-2 
+                ${index === ['basic', 'keywords', 'review'].indexOf(currentStep)
+                  ? 'border-blue-600 bg-blue-50'
+                  : 'border-gray-300'}`}
               >
-                <Plus className="h-4 w-4 mr-2" /> Agregar Keyword
-              </Button>
+                {index + 1}
+              </div>
+              <span className="ml-2">{step}</span>
             </div>
-          ))}
+            {index < 2 && <div className="h-1 w-12 bg-gray-200 mx-2" />}
+          </div>
+        ))}
+      </div>
+
+      {/* Error/Success messages */}
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative">
+          {error}
+        </div>
+      )}
+      {success && (
+        <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded relative">
+          {success}
+        </div>
+      )}
+
+      {/* Content based on current step */}
+      {currentStep === 'basic' && (
+        <BasicConfigStep
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          resultsCount={resultsCount}
+          setResultsCount={setResultsCount}
+          googleDomain={googleDomain}
+          setGoogleDomain={setGoogleDomain}
+          language={language}
+          setLanguage={setLanguage}
+        />
+      )}
+      {currentStep === 'keywords' && (
+        <KeywordsConfigStep
+          categories={categories}
+          setCategories={setCategories}
+        />
+      )}
+      {currentStep === 'review' && (
+        <ReviewStep
+          searchQuery={searchQuery}
+          resultsCount={resultsCount}
+          googleDomain={googleDomain}
+          language={language}
+          categories={categories}
+        />
+      )}
+
+      {/* Navigation buttons */}
+      <div className="flex justify-between mt-6">
+        {currentStep !== 'basic' && (
           <Button
             type="button"
-            onClick={handleAddCategory}
-            className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white transition-all duration-200"
+            variant="outline"
+            onClick={handlePreviousStep}
           >
-            <Plus className="h-4 w-4 mr-2" /> Agregar Categoría
+            Anterior
           </Button>
-        </CardContent>
-      </Card>
-
-      <Button
-        type="submit"
-        className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white transition-all duration-200"
-      >
-        <Search className="h-4 w-4 mr-2" /> Iniciar Búsqueda
-      </Button>
-    </form>
+        )}
+        {currentStep !== 'review' ? (
+          <Button
+            type="button"
+            onClick={handleNextStep}
+            className="ml-auto"
+          >
+            Siguiente
+          </Button>
+        ) : (
+          <Button
+            type="submit"
+            onClick={handleSubmit}
+            className="ml-auto bg-blue-600 hover:bg-blue-700"
+          >
+            Iniciar Búsqueda
+          </Button>
+        )}
+      </div>
+    </div>
   )
 }
 
