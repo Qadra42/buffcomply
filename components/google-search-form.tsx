@@ -75,14 +75,51 @@ export function GoogleSearchForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("Iniciando búsqueda en Google:", {
-      searchQuery,
-      resultsCount,
-      googleDomain,
-      language,
-      categories,
-    })
-    router.push("/google-search/results")
+    
+    if (!searchQuery.trim()) {
+      console.error('La búsqueda no puede estar vacía')
+      return
+    }
+    
+    try {
+      // Extraer todas las keywords como array
+      const allKeywords = categories
+        .flatMap(cat => cat.keywords)
+        .filter(k => k.trim() !== '')
+
+      // Construir la URL con los parámetros
+      const params = new URLSearchParams()
+      params.append('query', searchQuery)
+      // Agregar cada keyword individualmente
+      allKeywords.forEach(keyword => {
+        params.append('keywords', keyword)
+      })
+      params.append('country', googleDomain.split('.').pop() || 'com')
+      params.append('max_results', resultsCount)
+      params.append('max_depth', '1')
+
+      const response = await fetch(
+        `http://localhost:8000/api/v1/google-search?${params.toString()}`,
+        {
+          method: 'GET',
+          headers: {
+            'accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.detail || 'Error en la búsqueda')
+      }
+
+      const data = await response.json()
+      console.log(data, "??????")
+      router.push(`/results/`)
+    } catch (error) {
+      console.error('Error:', error)
+    }
   }
 
   return (
