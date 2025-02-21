@@ -90,6 +90,17 @@ export function SiteResultsCard({ site }: { site: SiteScrapingResult }) {
 
   const totalPages = Math.ceil(filteredResults.length / itemsPerPage)
 
+  const getHostname = (url: string): string => {
+    try {
+      // Asegurarse de que la URL tenga el protocolo
+      const urlWithProtocol = url.startsWith('http') ? url : `https://${url}`
+      return new URL(urlWithProtocol).hostname
+    } catch (error) {
+      // Si falla, devolver la URL original o un texto alternativo
+      return url
+    }
+  }
+
   const extractMainDomain = (urls: string[]) => {
     try {
       if (!urls || urls.length === 0) return '';
@@ -205,7 +216,7 @@ export function SiteResultsCard({ site }: { site: SiteScrapingResult }) {
                 className="inline-flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-2 py-1 rounded-md transition-colors"
               >
                 <Globe className="h-4 w-4" />
-                {new URL(url).hostname}
+                {getHostname(url)}
               </a>
             ))}
           </div>
