@@ -146,7 +146,7 @@ export function SiteScraperForm() {
       params.append('title', title)
       params.append('max_depth', '1')
 
-      const response = await fetch(`http://api.buffcomply.com/api/v1/scrape/?${params.toString()}`)
+      const response = await fetch(`https://api.buffcomply.com/api/v1/scrape/?${params.toString()}`)
 
       if (!response.ok) {
         throw new Error('Error al iniciar el scraping')

@@ -116,7 +116,7 @@ export function GoogleSearchForm() {
       params.append('max_depth', '1')
 
       const response = await fetch(
-        `http://api.buffcomply.com/api/v1/google-search?${params.toString()}`,
+        `https://api.buffcomply.com/api/v1/google-search?${params.toString()}`,
         {
           method: 'GET',
           headers: {

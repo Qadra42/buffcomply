@@ -35,7 +35,7 @@ export async function POST(request: Request) {
       max_depth: '1'
     }).toString();
 
-    const scrapingUrl = `http://api.buffcomply.com/api/v1/scrape/?${queryParams}`;
+    const scrapingUrl = `https://api.buffcomply.com/api/v1/scrape/?${queryParams}`;
 
     const response = await fetch(scrapingUrl, {
       method: 'GET',
