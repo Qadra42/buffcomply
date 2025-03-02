@@ -1,0 +1,46 @@
+{
+  "navigation": {
+    "dashboard": "Panel de Control",
+    "siteScraper": "Scraper de Sitios",
+    "googleSearch": "Búsqueda Google",
+    "results": "Resultados",
+    "rankings": "Rankings",
+    "settings": "Configuración",
+    "help": "Ayuda"
+  },
+  "common": {
+    "title": "Buff Comply",
+    "subtitle": "Monitor de Cumplimiento",
+    "language": "Idioma",
+    "search": "Buscar",
+    "filters": "Filtros",
+    "export": "Exportar",
+    "viewDetails": "Ver Detalles",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "page": "Página",
+    "of": "de"
+  },
+  "results": {
+    "title": "Resultados del Scraping",
+    "searchPlaceholder": "Buscar sitios...",
+    "analyzedSites": "Sitios analizados",
+    "scannedUrls": "URLs Escaneadas",
+    "totalMatches": "Coincidencias Totales",
+    "foundKeywords": "Keywords Encontradas",
+    "duration": "Duración",
+    "successResults": "Resultados exitosos",
+    "errorsFound": "Errores encontrados",
+    "showErrors": "Mostrar Errores",
+    "showResults": "Mostrar Resultados",
+    "clearFilters": "Limpiar filtros",
+    "withMatches": "Con coincidencias",
+    "multipleUrls": "Múltiples URLs",
+    "lastSevenDays": "Últimos 7 días",
+    "lastScan": "Último escaneo",
+    "googleSearch": "Búsqueda",
+    "url": "URL",
+    "total": "Total",
+    "error": "Error"
+  }
+} 

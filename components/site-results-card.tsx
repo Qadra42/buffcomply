@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useTranslation } from "react-i18next"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -31,6 +32,7 @@ type SiteScrapingResult = {
 }
 
 export function SiteResultsCard({ site }: { site: SiteScrapingResult }) {
+  const { t } = useTranslation()
   const [isExpanded, setIsExpanded] = useState(false)
   const [detailsSearch, setDetailsSearch] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
@@ -174,12 +176,12 @@ export function SiteResultsCard({ site }: { site: SiteScrapingResult }) {
                     <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
                     <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
                   </svg>
-                  <span className="text-sm text-blue-700 font-medium">Búsqueda</span>
+                  <span className="text-sm text-blue-700 font-medium">{t('results.googleSearch')}</span>
                 </div>
               )}
             </div>
             <p className="text-sm text-gray-500">
-              Último escaneo: {site.created_at}
+              {t('results.lastScan')}: {site.created_at}
             </p>
           </div>
           <div className="flex items-center gap-2 shrink-0">
@@ -189,7 +191,7 @@ export function SiteResultsCard({ site }: { site: SiteScrapingResult }) {
               className="border border-gray-200 bg-white hover:bg-gray-50"
             >
               <Download className="h-4 w-4 mr-2" />
-              Exportar CSV
+              {t('common.export')} CSV
             </Button>
             <Button 
               variant="outline" 
@@ -197,14 +199,14 @@ export function SiteResultsCard({ site }: { site: SiteScrapingResult }) {
               className="border border-gray-200 bg-white hover:bg-gray-50 whitespace-nowrap"
             >
               <ChevronRight className={`h-4 w-4 mr-2 transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`} />
-              Ver detalles
+              {t('common.viewDetails')}
             </Button>
           </div>
         </div>
 
         <div className="mt-4">
           <p className="text-sm font-medium text-gray-600 mb-2">
-            Sitios analizados:
+            {t('results.analyzedSites')}:
           </p>
           <div className="flex flex-wrap gap-2">
             {site.start_urls.map((url, index) => (
@@ -224,22 +226,22 @@ export function SiteResultsCard({ site }: { site: SiteScrapingResult }) {
 
         <div className="grid grid-cols-4 gap-4 mt-4">
           <StatsCard
-            label="URLs Escaneadas"
+            label={t('results.scannedUrls')}
             value={Object.keys(site.results).length}
             trend="neutral"
           />
           <StatsCard
-            label="Coincidencias Totales"
+            label={t('results.totalMatches')}
             value={site.total_coincidences}
             trend={site.total_coincidences > 0 ? "positive" : "neutral"}
           />
           <StatsCard
-            label="Keywords Encontradas"
+            label={t('results.foundKeywords')}
             value={Object.keys(Object.values(site.results)[0] || {}).length}
             trend="neutral"
           />
           <StatsCard
-            label="Duración"
+            label={t('results.duration')}
             value={`${site.duration_seconds.toFixed(1)}s`}
             trend="neutral"
           />
@@ -253,7 +255,7 @@ export function SiteResultsCard({ site }: { site: SiteScrapingResult }) {
               <div className="relative flex-1">
                 <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
                 <Input
-                  placeholder="Buscar en resultados..."
+                  placeholder={t('results.searchPlaceholder')}
                   value={detailsSearch}
                   onChange={(e) => {
                     setDetailsSearch(e.target.value)
@@ -275,7 +277,7 @@ export function SiteResultsCard({ site }: { site: SiteScrapingResult }) {
                     htmlFor="error-mode"
                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                   >
-                    {showErrors ? 'Mostrar Errores' : 'Mostrar Resultados'}
+                    {showErrors ? t('results.showErrors') : t('results.showResults')}
                   </label>
                 </div>
 
@@ -284,12 +286,12 @@ export function SiteResultsCard({ site }: { site: SiteScrapingResult }) {
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="outline" className="flex items-center gap-2">
-                        Filtros
+                        {t('results.filters')}
                         <ChevronDown className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-56">
-                      <DropdownMenuLabel>Keywords</DropdownMenuLabel>
+                      <DropdownMenuLabel>{t('results.keywords')}</DropdownMenuLabel>
                       <DropdownMenuSeparator />
                       <div className="p-2">
                         {keywords.map(keyword => (
@@ -321,10 +323,10 @@ export function SiteResultsCard({ site }: { site: SiteScrapingResult }) {
             {/* Mostrar estadísticas de errores/éxitos */}
             <div className="flex gap-4 text-sm text-gray-600">
               <span>
-                Resultados exitosos: {successResults.length}
+                {t('results.successResults')}: {successResults.length}
               </span>
               <span>
-                Errores encontrados: {errorResults.length}
+                {t('results.errorsFound')}: {errorResults.length}
               </span>
             </div>
 
@@ -332,12 +334,12 @@ export function SiteResultsCard({ site }: { site: SiteScrapingResult }) {
               <table className="w-full text-sm text-left">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3">URL</th>
+                    <th className="px-6 py-3">{t('results.url')}</th>
                     {!showErrors && keywords.map((keyword) => (
                       <th key={keyword} className="px-6 py-3">{keyword}</th>
                     ))}
                     <th className="px-6 py-3">
-                      {showErrors ? 'Error' : 'Total'}
+                      {showErrors ? t('results.error') : t('results.total')}
                     </th>
                   </tr>
                 </thead>
@@ -388,17 +390,17 @@ export function SiteResultsCard({ site }: { site: SiteScrapingResult }) {
                     onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                     disabled={currentPage === 1}
                   >
-                    Anterior
+                    {t('common.previous')}
                   </Button>
                   <span className="py-2 px-4 bg-gray-100 rounded">
-                    Página {currentPage} de {totalPages}
+                    {t('common.page')} {currentPage} {t('common.of')} {totalPages}
                   </span>
                   <Button
                     variant="outline"
                     onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                     disabled={currentPage === totalPages}
                   >
-                    Siguiente
+                    {t('common.next')}
                   </Button>
                 </div>
               </div>

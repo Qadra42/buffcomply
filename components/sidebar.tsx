@@ -4,7 +4,7 @@ import type React from "react"
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Home, Search, BarChart2, Settings, HelpCircle, TrendingUp, Globe } from "lucide-react"
+import { Home, Search, BarChart2, Settings, HelpCircle, TrendingUp, Globe, Globe2 } from "lucide-react"
 import {
   Sidebar,
   SidebarHeader,
@@ -15,7 +15,12 @@ import {
   SidebarProvider,
   SidebarTrigger,
   SidebarInset,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarGroupContent,
 } from "@/components/ui/sidebar"
+import { useTranslation } from 'react-i18next';
+import { LanguageSwitcher } from "@/components/language-switcher";
 
 export function SidebarWrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -38,6 +43,7 @@ export function SidebarWrapper({ children }: { children: React.ReactNode }) {
 
 function AppSidebar() {
   const pathname = usePathname()
+  const { t } = useTranslation();
 
   return (
     <Sidebar>
@@ -48,8 +54,8 @@ function AppSidebar() {
               <Link href="/">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-500 text-white">BC</div>
                 <div className="flex flex-col gap-0.5">
-                  <span className="font-semibold">Buff Comply</span>
-                  <span className="text-xs text-muted-foreground">Compliance Monitor</span>
+                  <span className="font-semibold">{t('common.title')}</span>
+                  <span className="text-xs text-muted-foreground">{t('common.subtitle')}</span>
                 </div>
               </Link>
             </SidebarMenuButton>
@@ -63,7 +69,7 @@ function AppSidebar() {
             <SidebarMenuButton asChild isActive={pathname === "/"}>
               <Link href="/">
                 <Home className="h-4 w-4" />
-                <span>Dashboard</span>
+                <span>{t('navigation.dashboard')}</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -72,7 +78,7 @@ function AppSidebar() {
             <SidebarMenuButton asChild isActive={pathname === "/scraper"}>
               <Link href="/scraper">
                 <Search className="h-4 w-4" />
-                <span>Site Scraper</span>
+                <span>{t('navigation.siteScraper')}</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -81,7 +87,7 @@ function AppSidebar() {
             <SidebarMenuButton asChild isActive={pathname === "/google-search"}>
               <Link href="/google-search">
                 <Globe className="h-4 w-4" />
-                <span>Google Search</span>
+                <span>{t('navigation.googleSearch')}</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -90,7 +96,7 @@ function AppSidebar() {
             <SidebarMenuButton asChild isActive={pathname === "/results"}>
               <Link href="/results">
                 <BarChart2 className="h-4 w-4" />
-                <span>Results</span>
+                <span>{t('navigation.results')}</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -99,7 +105,7 @@ function AppSidebar() {
             <SidebarMenuButton asChild isActive={pathname === "/rankings"}>
               <Link href="/rankings">
                 <TrendingUp className="h-4 w-4" />
-                <span>Rankings</span>
+                <span>{t('navigation.rankings')}</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -108,7 +114,7 @@ function AppSidebar() {
             <SidebarMenuButton asChild isActive={pathname === "/settings"}>
               <Link href="/settings">
                 <Settings className="h-4 w-4" />
-                <span>Settings</span>
+                <span>{t('navigation.settings')}</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -117,11 +123,17 @@ function AppSidebar() {
             <SidebarMenuButton asChild isActive={pathname === "/help"}>
               <Link href="/help">
                 <HelpCircle className="h-4 w-4" />
-                <span>Help</span>
+                <span>{t('navigation.help')}</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
+
+        <SidebarGroup className="mt-auto">
+          <SidebarGroupContent>
+            <LanguageSwitcher />
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
     </Sidebar>
   )

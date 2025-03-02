@@ -1,0 +1,46 @@
+{
+  "navigation": {
+    "dashboard": "Dashboard",
+    "siteScraper": "Site Scraper",
+    "googleSearch": "Google Search",
+    "results": "Results",
+    "rankings": "Rankings",
+    "settings": "Settings",
+    "help": "Help"
+  },
+  "common": {
+    "title": "Buff Comply",
+    "subtitle": "Compliance Monitor",
+    "language": "Language",
+    "search": "Search",
+    "filters": "Filters",
+    "export": "Export",
+    "viewDetails": "View Details",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page",
+    "of": "of"
+  },
+  "results": {
+    "title": "Scraping Results",
+    "searchPlaceholder": "Search sites...",
+    "analyzedSites": "Analyzed Sites",
+    "scannedUrls": "Scanned URLs",
+    "totalMatches": "Total Matches",
+    "foundKeywords": "Found Keywords",
+    "duration": "Duration",
+    "successResults": "Successful Results",
+    "errorsFound": "Errors Found",
+    "showErrors": "Show Errors",
+    "showResults": "Show Results",
+    "clearFilters": "Clear Filters",
+    "withMatches": "With Matches",
+    "multipleUrls": "Multiple URLs",
+    "lastSevenDays": "Last 7 Days",
+    "lastScan": "Last Scan",
+    "googleSearch": "Search",
+    "url": "URL",
+    "total": "Total",
+    "error": "Error"
+  }
+} 

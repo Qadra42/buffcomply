@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
 import { SidebarWrapper } from "@/components/sidebar"
+import "@/src/i18n"
 
 const inter = Inter({ subsets: ["latin"] })
 

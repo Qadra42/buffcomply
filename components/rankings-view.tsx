@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useTranslation } from "react-i18next"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Input } from "@/components/ui/input"
@@ -84,6 +85,7 @@ const mockHistoricalData: HistoricalData[] = [
 ]
 
 export function RankingsView() {
+  const { t } = useTranslation()
   const [rankings, setRankings] = useState<Ranking[]>(mockRankings)
   const [filteredRankings, setFilteredRankings] = useState<Ranking[]>(mockRankings)
   const [searchTerm, setSearchTerm] = useState("")
@@ -119,13 +121,13 @@ export function RankingsView() {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Rankings Overview</CardTitle>
+          <CardTitle>{t('rankings.overview')}</CardTitle>
           <div className="flex justify-between items-center">
             <div className="relative">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
               <Input
                 type="text"
-                placeholder="Search affiliate sites..."
+                placeholder={t('rankings.searchPlaceholder')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-8"
@@ -133,11 +135,11 @@ export function RankingsView() {
             </div>
             <Select onValueChange={(value) => setSortBy(value as "position" | "site")}>
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Sort by" />
+                <SelectValue placeholder={t('rankings.sortBy')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="position">Sort by Position</SelectItem>
-                <SelectItem value="site">Sort by Site Name</SelectItem>
+                <SelectItem value="position">{t('rankings.sortByPosition')}</SelectItem>
+                <SelectItem value="site">{t('rankings.sortBySite')}</SelectItem>
               </SelectContent>
             </Select>
           </div>

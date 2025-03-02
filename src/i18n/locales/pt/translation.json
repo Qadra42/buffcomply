@@ -1,0 +1,15 @@
+{
+  "navigation": {
+    "dashboard": "Painel",
+    "siteScraper": "Scraper de Sites",
+    "googleSearch": "Pesquisa Google",
+    "results": "Resultados",
+    "rankings": "Rankings",
+    "settings": "Configurações",
+    "help": "Ajuda"
+  },
+  "common": {
+    "title": "Buff Comply",
+    "subtitle": "Monitor de Conformidade"
+  }
+} 

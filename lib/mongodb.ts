@@ -29,5 +29,5 @@ if (process.env.NODE_ENV === 'development') {
 
 export async function connectToMongoDB() {
   const client = await clientPromise
-  return client.db('scraper_db') // Asegúrate de que este nombre coincida con tu base de datos
+  return client.db('scraper_db')
 } 
