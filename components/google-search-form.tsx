@@ -122,7 +122,9 @@ export function GoogleSearchForm() {
           headers: {
             'accept': 'application/json',
             'Content-Type': 'application/json'
-          }
+          },
+          redirect: 'follow', // Seguir redirecciones automáticamente
+          credentials: 'include' // Incluir cookies si es necesario
         }
       )
 
