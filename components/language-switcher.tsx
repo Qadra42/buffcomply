@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslation } from 'react-i18next';
-import { Check, Globe2 } from 'lucide-react';
+import { Check } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,

@@ -86,7 +86,7 @@ const mockHistoricalData: HistoricalData[] = [
 
 export function RankingsView() {
   const { t } = useTranslation()
-  const [rankings, setRankings] = useState<Ranking[]>(mockRankings)
+  const [rankings, ] = useState<Ranking[]>(mockRankings)
   const [filteredRankings, setFilteredRankings] = useState<Ranking[]>(mockRankings)
   const [searchTerm, setSearchTerm] = useState("")
   const [sortBy, setSortBy] = useState<"position" | "site">("position")

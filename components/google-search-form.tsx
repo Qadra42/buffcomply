@@ -5,11 +5,6 @@ import type React from "react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Plus, Minus, Search, Globe2 } from "lucide-react"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { BasicConfigStep } from "@/components/steps/basic-config-step"
 import { KeywordsConfigStep } from "@/components/steps/keywords-config-step"
 import { ReviewStep } from "@/components/steps/review-step"
@@ -17,20 +12,6 @@ import { ReviewStep } from "@/components/steps/review-step"
 type Category = {
   name: string
   keywords: string[]
-}
-
-const GOOGLE_DOMAINS = {
-  "google.com": "Global (Estados Unidos)",
-  "google.com.br": "Brasil",
-  "google.es": "España",
-  "google.com.mx": "México",
-  "google.com.ar": "Argentina",
-}
-
-const LANGUAGES = {
-  en: "Inglés",
-  es: "Español",
-  pt: "Portugués",
 }
 
 // Definir los pasos del wizard
@@ -55,32 +36,6 @@ export function GoogleSearchForm() {
   const [currentStep, setCurrentStep] = useState<WizardStep>('basic')
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
-
-  const handleAddCategory = () => {
-    setCategories([...categories, { name: "", keywords: [] }])
-  }
-
-  const handleRemoveCategory = (index: number) => {
-    setCategories(categories.filter((_, i) => i !== index))
-  }
-
-  const handleCategoryNameChange = (index: number, name: string) => {
-    const newCategories = [...categories]
-    newCategories[index].name = name
-    setCategories(newCategories)
-  }
-
-  const handleAddKeyword = (categoryIndex: number, keyword: string) => {
-    const newCategories = [...categories]
-    newCategories[categoryIndex].keywords.push(keyword)
-    setCategories(newCategories)
-  }
-
-  const handleRemoveKeyword = (categoryIndex: number, keywordIndex: number) => {
-    const newCategories = [...categories]
-    newCategories[categoryIndex].keywords.splice(keywordIndex, 1)
-    setCategories(newCategories)
-  }
 
   // Validación del paso básico
   const validateBasicStep = () => {

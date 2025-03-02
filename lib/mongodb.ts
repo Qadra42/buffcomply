@@ -12,15 +12,21 @@ let clientPromise: Promise<MongoClient>
 
 if (process.env.NODE_ENV === 'development') {
   // En desarrollo, usa una variable global para mantener la conexión viva
-  let globalWithMongo = global as typeof globalThis & {
-    _mongoClientPromise?: Promise<MongoClient>
+  const globalWithMongo = global as typeof globalThis & {
+    mongo?: {
+      conn: MongoClient | null;
+      promise: Promise<MongoClient> | null;
+    };
   }
 
-  if (!globalWithMongo._mongoClientPromise) {
+  if (!globalWithMongo.mongo) {
     client = new MongoClient(uri, options)
-    globalWithMongo._mongoClientPromise = client.connect()
+    globalWithMongo.mongo = {
+      conn: client,
+      promise: client.connect()
+    }
   }
-  clientPromise = globalWithMongo._mongoClientPromise
+  clientPromise = globalWithMongo.mongo.promise!
 } else {
   // En producción, es mejor crear una nueva conexión
   client = new MongoClient(uri, options)

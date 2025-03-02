@@ -18,6 +18,9 @@ type SiteScrapingResult = {
   total_coincidences: number
   results: Record<string, Record<string, boolean>>
   last_scan: string
+  search_query: string
+  created_at?: string
+  keywords?: string[]
 }
 
 export function ResultsView() {
@@ -215,7 +218,14 @@ export function ResultsView() {
               {activeView === "sites" ? (
                 <div className="space-y-6">
                   {paginatedSites.map((site, index) => (
-                    <SiteResultsCard key={`${site.title}-${index}`} site={site} />
+                    <SiteResultsCard 
+                      key={`${site.title}-${index}`} 
+                      site={{
+                        ...site, 
+                        search_query: site.search_query || "",
+                        created_at: site.created_at || site.last_scan
+                      }} 
+                    />
                   ))}
                   
                   {/* Paginación */}

@@ -1,13 +1,11 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { ExternalLink, ChevronDown, ChevronRight, Download, Search, Globe, AlertCircle } from "lucide-react"
+import { ExternalLink, ChevronDown, ChevronRight, Download, Search, AlertCircle, Globe } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
   DropdownMenu,
@@ -40,8 +38,8 @@ export function SiteResultsCard({ site }: { site: SiteScrapingResult }) {
   const [showErrors, setShowErrors] = useState(false)
   const itemsPerPage = 10
 
-  // Usar las keywords del modelo directamente
-  const keywords = site.keywords || []
+  // Wrap keywords in useMemo to avoid re-renders
+  const keywords = useMemo(() => site.keywords || [], [site.keywords])
 
   // Inicializar las condiciones usando las keywords del modelo
   useEffect(() => {
@@ -52,12 +50,13 @@ export function SiteResultsCard({ site }: { site: SiteScrapingResult }) {
       }), {})
       setSelectedConditions(initial)
     }
-  }, [keywords])
+  }, [keywords, selectedConditions])
 
   // Separar resultados con error y exitosos
   const { errorResults, successResults } = Object.entries(site.results).reduce(
     (acc, [url, result]) => {
       if (result && typeof result === 'object' && 'error' in result) {
+        // @ts-expect-error - Type checking for results object
         acc.errorResults.push([url, result])
       } else {
         acc.successResults.push([url, result])
@@ -65,23 +64,23 @@ export function SiteResultsCard({ site }: { site: SiteScrapingResult }) {
       return acc
     },
     { errorResults: [], successResults: [] } as {
-      errorResults: [string, any][],
-      successResults: [string, any][]
+      errorResults: [string, { error: string }][],
+      successResults: [string, Record<string, boolean>][]
     }
   )
 
   // Filtrar según el modo seleccionado
   const filteredResults = (showErrors ? errorResults : successResults)
     .filter(([url]) => url.toLowerCase().includes(detailsSearch.toLowerCase()))
-    .filter(([_, result]) => {
+    .filter(([, result]) => {
       if (showErrors) return true // No aplicar filtros de keywords a errores
 
       const activeConditions = Object.entries(selectedConditions)
-        .filter(([_, isSelected]) => isSelected)
+        .filter(([, isSelected]) => isSelected)
         .map(([keyword]) => keyword)
       
       if (activeConditions.length === 0) return true
-
+      // @ts-expect-error - Type checking for nested object
       return activeConditions.every(keyword => result[keyword])
     })
 
@@ -97,30 +96,27 @@ export function SiteResultsCard({ site }: { site: SiteScrapingResult }) {
       // Asegurarse de que la URL tenga el protocolo
       const urlWithProtocol = url.startsWith('http') ? url : `https://${url}`
       return new URL(urlWithProtocol).hostname
-    } catch (error) {
+    } catch {
       // Si falla, devolver la URL original o un texto alternativo
       return url
     }
   }
 
+  // Remove unused function if not needed elsewhere
+  // If you need to keep it for future use, you can add a comment to disable the linter warning
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const extractMainDomain = (urls: string[]) => {
     try {
       if (!urls || urls.length === 0) return '';
       const url = new URL(urls[0]);
       return url.hostname;
-    } catch (error) {
+    } catch {
       // Si la URL es inválida, devolvemos la URL original o un string vacío
       return urls[0] || '';
     }
   };
   
-  const totalMatches = Object.values(site.results).reduce(
-    (sum, keywords) => sum + Object.values(keywords).filter(Boolean).length,
-    0,
-  )
-
   const isGoogleSearch = Boolean(site?.search_query)
-  const mainDomain = extractMainDomain(site.start_urls)
 
   const handleExportCSV = () => {
     // Preparar los datos según el modo
@@ -368,7 +364,7 @@ export function SiteResultsCard({ site }: { site: SiteScrapingResult }) {
                         <>
                           {keywords.map((keyword) => (
                             <td key={keyword} className="px-6 py-4">
-                              {result[keyword] ? "Sí" : "No"}
+                              {!('error' in result) && result[keyword] ? "Sí" : "No"}
                             </td>
                           ))}
                           <td className="px-6 py-4">

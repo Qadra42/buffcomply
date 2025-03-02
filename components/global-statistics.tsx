@@ -1,5 +1,4 @@
-import { Card, CardContent } from "@/components/ui/card"
-import { Globe, Search, Clock, Signal, BarChart2 } from "lucide-react"
+import { Globe, Search, Clock, BarChart2 } from "lucide-react"
 
 type SiteScrapingResult = {
   start_urls: string[]

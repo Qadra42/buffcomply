@@ -4,7 +4,7 @@ import type React from "react"
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Home, Search, BarChart2, Settings, HelpCircle, TrendingUp, Globe, Globe2 } from "lucide-react"
+import { Home, Search, BarChart2, Settings, HelpCircle, TrendingUp, Globe } from "lucide-react"
 import {
   Sidebar,
   SidebarHeader,
@@ -16,7 +16,6 @@ import {
   SidebarTrigger,
   SidebarInset,
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarGroupContent,
 } from "@/components/ui/sidebar"
 import { useTranslation } from 'react-i18next';
