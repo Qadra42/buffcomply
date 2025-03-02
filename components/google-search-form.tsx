@@ -115,16 +115,14 @@ export function GoogleSearchForm() {
       params.append('max_results', resultsCount)
       params.append('max_depth', '1')
 
+      // Modificar para usar API Routes de Next.js en lugar de llamar directamente a la API externa
       const response = await fetch(
-        `https://api.buffcomply.com/api/v1/google-search?${params.toString()}`,
+        `/api/google-search?${params.toString()}`,
         {
           method: 'GET',
           headers: {
-            'accept': 'application/json',
             'Content-Type': 'application/json'
-          },
-          mode: 'cors',  // Especificar explícitamente el modo CORS
-          credentials: 'include'  // Incluir cookies si es necesario
+          }
         }
       )
 
