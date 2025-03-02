@@ -123,8 +123,8 @@ export function GoogleSearchForm() {
             'accept': 'application/json',
             'Content-Type': 'application/json'
           },
-          redirect: 'follow', // Seguir redirecciones automáticamente
-          credentials: 'include' // Incluir cookies si es necesario
+          mode: 'cors',  // Especificar explícitamente el modo CORS
+          credentials: 'include'  // Incluir cookies si es necesario
         }
       )
 
