@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button"
 import { Search, ArrowUpDown, Filter, X } from "lucide-react"
 import { SiteResultsCard } from "./site-results-card"
 import { GlobalStatistics } from "./global-statistics"
-import { ComparisonView } from "./comparison-view"
 import { Checkbox } from "@/components/ui/checkbox"
 
 type SiteScrapingResult = {
@@ -215,7 +214,6 @@ export function ResultsView() {
           ) : (
             <div className="space-y-6">
               <GlobalStatistics sites={sites} />
-              {activeView === "sites" ? (
                 <div className="space-y-6">
                   {paginatedSites.map((site, index) => (
                     <SiteResultsCard 
@@ -251,9 +249,6 @@ export function ResultsView() {
                     </div>
                   )}
                 </div>
-              ) : (
-                <ComparisonView sites={filteredSites} />
-              )}
             </div>
           )}
         </CardContent>

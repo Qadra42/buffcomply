@@ -1,19 +1,12 @@
 {
   "navigation": {
-    "dashboard": "Dashboard",
     "siteScraper": "Site Scraper",
     "googleSearch": "Google Search",
-    "results": "Results",
-    "rankings": "Rankings",
-    "settings": "Settings",
-    "help": "Help"
+    "results": "Results"
   },
   "common": {
     "title": "Buff Comply",
     "subtitle": "Compliance Monitor",
-    "language": "Language",
-    "search": "Search",
-    "filters": "Filters",
     "export": "Export",
     "viewDetails": "View Details",
     "previous": "Previous",
@@ -22,7 +15,6 @@
     "of": "of"
   },
   "results": {
-    "title": "Scraping Results",
     "searchPlaceholder": "Search sites...",
     "analyzedSites": "Analyzed Sites",
     "scannedUrls": "Scanned URLs",
@@ -34,9 +26,6 @@
     "showErrors": "Show Errors",
     "showResults": "Show Results",
     "clearFilters": "Clear Filters",
-    "withMatches": "With Matches",
-    "multipleUrls": "Multiple URLs",
-    "lastSevenDays": "Last 7 Days",
     "lastScan": "Last Scan",
     "googleSearch": "Search",
     "url": "URL",

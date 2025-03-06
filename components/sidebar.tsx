@@ -65,13 +65,13 @@ function AppSidebar() {
       <SidebarContent>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild isActive={pathname === "/"}>
-              <Link href="/">
-                <Home className="h-4 w-4" />
-                <span>{t('navigation.dashboard')}</span>
+            <SidebarMenuButton asChild isActive={pathname === "/results"}>
+              <Link href="/results">
+                <BarChart2 className="h-4 w-4" />
+                <span>{t('navigation.results')}</span>
               </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
 
           <SidebarMenuItem>
             <SidebarMenuButton asChild isActive={pathname === "/scraper"}>
@@ -87,42 +87,6 @@ function AppSidebar() {
               <Link href="/google-search">
                 <Globe className="h-4 w-4" />
                 <span>{t('navigation.googleSearch')}</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild isActive={pathname === "/results"}>
-              <Link href="/results">
-                <BarChart2 className="h-4 w-4" />
-                <span>{t('navigation.results')}</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild isActive={pathname === "/rankings"}>
-              <Link href="/rankings">
-                <TrendingUp className="h-4 w-4" />
-                <span>{t('navigation.rankings')}</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild isActive={pathname === "/settings"}>
-              <Link href="/settings">
-                <Settings className="h-4 w-4" />
-                <span>{t('navigation.settings')}</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild isActive={pathname === "/help"}>
-              <Link href="/help">
-                <HelpCircle className="h-4 w-4" />
-                <span>{t('navigation.help')}</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
