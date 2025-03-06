@@ -25,12 +25,12 @@ export function GoogleSearchForm() {
   const [language, setLanguage] = useState("en")
   const [categories, setCategories] = useState<Category[]>([
     {
-      name: "Afiliados",
-      keywords: ["review", "mejor", "top", "comparación"],
+      name: "Casinos",
+      keywords: [],
     },
     {
       name: "Bonos",
-      keywords: ["bono bienvenida", "sin depósito", "giros gratis"],
+      keywords: [],
     },
   ])
   const [currentStep, setCurrentStep] = useState<WizardStep>('basic')
