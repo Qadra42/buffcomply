@@ -6,7 +6,6 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Search, ArrowUpDown, Filter, X } from "lucide-react"
 import { SiteResultsCard } from "./site-results-card"
-import { GlobalStatistics } from "./global-statistics"
 import { Checkbox } from "@/components/ui/checkbox"
 
 type SiteScrapingResult = {
@@ -213,7 +212,6 @@ export function ResultsView() {
             <div className="text-center py-8">Cargando resultados...</div>
           ) : (
             <div className="space-y-6">
-              <GlobalStatistics sites={sites} />
                 <div className="space-y-6">
                   {paginatedSites.map((site, index) => (
                     <SiteResultsCard 
