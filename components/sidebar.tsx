@@ -4,7 +4,7 @@ import type React from "react"
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Home, Search, BarChart2, Settings, HelpCircle, TrendingUp, Globe } from "lucide-react"
+import { Search, BarChart2, Globe } from "lucide-react"
 import {
   Sidebar,
   SidebarHeader,
