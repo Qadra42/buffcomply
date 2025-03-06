@@ -115,7 +115,7 @@ export function GoogleSearchForm() {
       params.append('max_results', resultsCount)
       params.append('max_depth', '1')
       
-      const response = await fetch(`https://api.buffcomply.com/api/v1/google-search?${params.toString()}`)
+      const response = await fetch(`https://api.buffcomply.com/api/v1/google-search/?${params.toString()}`)
 
       if (!response.ok) {
         const error = await response.json()
